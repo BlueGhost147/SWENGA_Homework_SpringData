@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<div th:replace="~{includes/bootstrapMeta :: bootstrapMeta}" />
+<title>Employee Manager</title>
+<div th:replace="~{includes/bootstrapCSS :: bootstrapCSS}" />
+</head>
+<body>
+	<div class="container" role="main">
+
+
+
+		<!--  1 simple button ----------------------------------------------------------- -->
+		<div class="row">
+			<div class="col-md-10">
+				<h1>Spring Data JPA</h1>
+			</div>
+
+			<div class="col-md-2">
+				<a href="fillSongList">
+					<button type="button" class="btn btn-success">Fill List</button>
+				</a>
+			</div>
+		</div>
+
+		<!--  search by Id ----------------------------------------------------------- -->
+		<form action="findById" method="post">
+			<div class="form-row">
+				<div class="form-group col-sm-12">
+					<label for="id">Find by Id:</label>
+					<input id="id" type="text" class="form-control" name="id">
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-sm-12">
+					<input class="btn btn-primary" type="submit" value="Do it">
+				</div>
+			</div>
+		</form>
+
+		<!--  paging example ----------------------------------------------------------- -->
+		<form action="getPage" method="post">
+			<div class="form-row">
+				<div class="form-group col-sm-6">
+					<label for="page">Page:</label>
+					<input id="page" type="text" class="form-control" name="page">
+				</div>		
+				<div class="form-group col-sm-6">
+					<label for="size">Size:</label>
+					<input id="size" type="text" class="form-control" name="size">	
+				</div>
+			</div>	
+			<div class="form-row">
+				<div class="form-group col-sm-12">
+			  		<input class="btn btn-primary" type="submit" value="Do it">
+				</div>
+			</div>
+		</form>
+
+
+		<!--  Search + Fill ----------------------------------------------------------- -->
+			<form method="post" action="find">
+				<div class="form-row">
+					<div class="form-group col-sm-6">
+						<label for="searchType">Search:</label> 
+						<select id="searchType" class="form-control" name="searchType">
+							<option value="query_allSongs" selected="selected">Show all songs</option>							
+							<option value="query_filterSongsByName">Filter songs by song name</option>
+							<option value="query_filterSongsByAlbum">Filter songs by album</option>
+							<option value="query_filterSongsBySongNameOrAlbum">Filter songs by song name or album</option>
+							<option value="query_searchInSongNameAlbumArtistLike">Filter songs by song name, album or artist with LIKE (@NamedQuery)</option>
+							<option value="query_filterSongsByArtist">Filter songs by artist (@Query)</option>
+							<option value="query_filterSongsByAlbumSortedASC">Filter songs by album and sort (@Query, ASC)</option>
+							<option value="query_filterSongsBySongNameTop5" selected="selected">Filter songs by song name TOP 5</option>	
+							<option value="query_countAlbumsByArtist" selected="selected">Count albums by artist</option>	
+							<option value="query_countArtists" selected="selected">Count artist</option>
+						</select>
+					</div>
+					<div class="form-group col-sm-6">
+						<label for="searchString">SearchString:</label>
+						<input id="searchString" class="form-control" type="text" name="searchString">
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-sm-12">
+						<input class="btn btn-primary" type="submit" value="Do it">	
+					</div>
+				</div>
+			</form>
+
+			<!--  Search + Fill ----------------------------------------------------------- -->
+			<h3>Count: <span th:text="${count}"></span></h3>
+
+		<div class="row">
+			<div class="col-md-10 offset-md-1">
+
+				<table data-toggle="table" class="table table-striped">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Song name</th>
+							<th>Album</th>
+							<th>Artist</th>
+							<th>Release data</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--  list all items ----------------------------------------------------------- -->
+						<tr th:each="song : ${songs}">
+							<td th:text="${song.id}"></td>
+							<td th:text="${song.songName}"></td>
+							<td th:text="${song.album}"></td>
+							<td th:text="${song.artist.name}"></td>
+							<td th:text="${#calendars.format(song.releaseDate,'dd.MM.yyyy')}"></td>
+							<td><a th:href="@{/delete(id=${song.id})}" class="btn btn-danger">Delete</a></td>
+							
+						</tr>
+						<!--  list all items ----------------------------------------------------------- -->
+					</tbody>
+				</table>
+								
+			</div>
+		</div>
+	</div>
+	<!--  End of container -->
+	<div th:replace="~{includes/bootstrapJS :: bootstrapJS}" />
+</body>
+</html>
